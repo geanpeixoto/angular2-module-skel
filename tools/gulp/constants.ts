@@ -6,7 +6,11 @@ const { dependencies } = require('../../package.json');
 export const PROJECT_ROOT = join(__dirname, '../..');
 export const SOURCE_ROOT = join(PROJECT_ROOT, 'src');
 export const LIB_ROOT = join(SOURCE_ROOT, 'lib');
-export const LIB_ASSETS = [join(LIB_ROOT, '**/*.!(ts)')];
+export const LIB_ASSETS = [
+  join(LIB_ROOT, '**/*.!(ts)'),
+  join('!', LIB_ROOT, 'tsconfig.json'),
+  join('!', LIB_ROOT, 'tsconfig-srcs.json')
+];
 export const DEMOAPP_ROOT = join(SOURCE_ROOT, 'demo-app');
 export const DEMOAPP_ASSETS = [join(DEMOAPP_ROOT, '**/*.!(sass|ts)')];
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
