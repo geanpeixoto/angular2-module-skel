@@ -63,6 +63,3 @@ export function inlineResourcesTask(dir: string) {
 export function copyTask(files: string[], outRoot: string) {
   return () => gulp.src(files).pipe(gulp.symlink(outRoot));
 }
-export function copyDirTask(dir: string, outRoot: string) {
-  return copyTask([_globify(dir)], outRoot);
-}

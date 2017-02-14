@@ -51,17 +51,26 @@ task('build:dev',
   )
 )
 
+function copyAssetTo(dist: string) {
+  const reload = serve.reload();
+  return (asset: string) => {
+    if (!asset.match(/\.(ts|sass)$/)) {
+      console.log(`Changed: ${asset}`);
+      copyTask([asset], dist);
+      reload();
+    }
+  }
+}
+
 task(':watch', () => {
   const reload = serve.reload();
   watch(join(LIB_ROOT, '**/*.ts'), series(':build:dev:lib:ts', reload));
   watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:dev:demoapp:ts', reload));
   watch(join(LIB_ROOT, '**/*.{sass,scss}'), series(':build:dev:lib:sass', reload));
   watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:dev:demoapp:sass', reload));
-  watch([...LIB_ASSETS, ...DEMOAPP_ASSETS]).on('change', (file: string) => {
-    if (file.match(/\.(ts|sass)$/)) {
-      serve.reload();
-    }
-  });
+
+  watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
+  watch(LIB_ASSETS).on('change', copyAssetTo(LIB_DIST_ROOT));
 });
 
 task('dev',
