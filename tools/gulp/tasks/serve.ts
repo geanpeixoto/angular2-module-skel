@@ -11,6 +11,7 @@ export function start(baseDir: string, middleware?: Middleware[]) {
       server: {
         baseDir
       },
+      logLevel: 'silent',
       middleware,
       cors: true
     });
@@ -19,5 +20,8 @@ export function start(baseDir: string, middleware?: Middleware[]) {
 }
 
 export function reload() {
-  return () => browserSync.reload();
+  return (done?: CallbackFn) => {
+    browserSync.reload();
+    if (done) done();
+  };
 }

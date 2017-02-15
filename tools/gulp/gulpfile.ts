@@ -1,6 +1,7 @@
+import { CallbackFn } from './utils/tasks-helper';
 import { join } from 'path';
 
-import { tsBuildTask, copyTask, sassBuildTask, inlineResourcesTask } from './tasks/build';
+import { copy, tsBuildTask, copyTask, sassBuildTask, inlineResourcesTask } from './tasks/build';
 import { rollupTask } from './tasks/rollup';
 import { cleanTask } from './tasks/clean';
 import { vendorTask } from './tasks/development';
@@ -15,68 +16,60 @@ import {
 const { task, parallel, series, watch } = require('gulp');
 
 task('clean', cleanTask(DIST_ROOT));
+task(':build:lib:ts', tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
+task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
+task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
+task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
+task(':build:lib:inline-resources', inlineResourcesTask(LIB_DIST_ROOT));
+task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS));
+task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
 
-task('build:prod',
-  series(
-    'clean',
+task(':build:demoapp:lib', buildLibTask(true));
+task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
+task(':build:demoapp:sass', sassBuildTask(DEMOAPP_ROOT, LIB_DIST_ROOT));
+task(':build:demoapp:assets', copyTask(DEMOAPP_ASSETS, DIST_ROOT));
+task(':build:demoapp:vendor', vendorTask(DEPENDENCIES, join(PROJECT_ROOT, 'node_modules'), join(DIST_ROOT, 'vendor')));
+task('build:demoapp', series('clean', series(
+  ':build:demoapp:lib',
+  parallel(
+    ':build:demoapp:ts',
+    ':build:demoapp:sass',
+    ':build:demoapp:assets',
+    ':build:demoapp:vendor'
+  )
+)));
+
+task(':dev:watch', watchTask());
+task(':dev:serve', serve.start(DIST_ROOT));
+task(':dev:reload', serve.reload());
+task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
+
+function buildLibTask(useCjs?: boolean) {
+  return series(
     parallel(
-      tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')),
-      copyTask(LIB_ASSETS, LIB_DIST_ROOT),
-      sassBuildTask(LIB_ROOT, LIB_DIST_ROOT)
+      `:build:lib:${useCjs ? 'ts-cjs' : 'ts'}`,
+      ':build:lib:assets',
+      ':build:lib:sass'
     ),
-    inlineResourcesTask(LIB_DIST_ROOT),
-    rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS)
-  )
-);
+    ':build:lib:inline-resources'
+  );
+}
 
-task(':build:dev:lib:ts', tsBuildTask(LIB_ROOT));
-task(':build:dev:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
-task(':build:dev:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
-task(':build:dev:demoapp:sass', sassBuildTask(DEMOAPP_ROOT, LIB_DIST_ROOT));
-task('build:dev',
-  series(
-    'clean',
-    parallel(
-      /** Compila a lib */
-      ':build:dev:lib:ts',
-      ':build:dev:lib:sass',
-      copyTask(LIB_ASSETS, LIB_DIST_ROOT),
-      /** Compila o demo-app */
-      ':build:dev:demoapp:ts',
-      ':build:dev:demoapp:sass',
-      copyTask(DEMOAPP_ASSETS, DIST_ROOT),
-      /** Copia as blibliotecas */
-      vendorTask(DEPENDENCIES, join(PROJECT_ROOT, 'node_modules'), join(DIST_ROOT, 'vendor'))
-    )
-  )
-)
-
-function copyAssetTo(dist: string) {
-  const reload = serve.reload();
-  return (asset: string) => {
+function copyAssetTo(dist: string, asset: string) {
+  return function copyAsset() {
     if (!asset.match(/\.(ts|sass)$/)) {
       console.log(`Changed: ${asset}`);
-      copyTask([asset], dist);
-      reload();
+      copy([asset], dist);
     }
   }
 }
 
-task(':watch', () => {
-  const reload = serve.reload();
-  watch(join(LIB_ROOT, '**/*.ts'), series(':build:dev:lib:ts', reload));
-  watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:dev:demoapp:ts', reload));
-  watch(join(LIB_ROOT, '**/*.{sass,scss}'), series(':build:dev:lib:sass', reload));
-  watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:dev:demoapp:sass', reload));
-
-  watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
-  watch(LIB_ASSETS).on('change', copyAssetTo(LIB_DIST_ROOT));
-});
-
-task('dev',
-  series(
-    'build:dev',
-    serve.start(DIST_ROOT),
-    ':watch'
-  )
-)
+function watchTask() {
+  return (done: CallbackFn) => {
+    watch(join(LIB_ROOT, '**/*'), series(':build:demoapp:lib', ':dev:reload'));
+    watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
+    watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
+    watch(LIB_ASSETS).on('change', (asset: string) => series(copyAssetTo(LIB_DIST_ROOT, asset), ':dev:reload'));
+    done();
+  }
+}
