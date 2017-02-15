@@ -61,5 +61,5 @@ export function inlineResourcesTask(dir: string) {
  * Retorna uma função que irá copiar todos os arquivos informados para a pasta destino
  */
 export function copyTask(files: string[], outRoot: string) {
-  return () => gulp.src(files).pipe(gulp.symlink(outRoot));
+  return () => gulp.src(files).pipe(gulp.dest(outRoot));
 }
