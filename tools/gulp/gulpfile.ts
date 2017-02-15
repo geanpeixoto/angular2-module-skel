@@ -9,7 +9,7 @@ import * as serve from './tasks/serve';
 import {
   LIB_ROOT, LIB_DIST_ROOT, DIST_ROOT, GLOBALS, GLOBAL,
   DEPENDENCIES, PROJECT_ROOT, DEMOAPP_ROOT, LIB_ASSETS,
-  DEMOAPP_ASSETS
+  DEMOAPP_ASSETS, LIB_DIST_MODULE, LIB_DIST_MAIN
 } from './constants';
 
 const { task, parallel, series, watch } = require('gulp');
@@ -25,7 +25,7 @@ task('build:prod',
       sassBuildTask(LIB_ROOT, LIB_DIST_ROOT)
     ),
     inlineResourcesTask(LIB_DIST_ROOT),
-    rollupTask(join(LIB_DIST_ROOT, 'index.js'), join(LIB_DIST_ROOT, 'bundles/skel.umd.js'), GLOBAL, GLOBALS)
+    rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS)
   )
 );
 

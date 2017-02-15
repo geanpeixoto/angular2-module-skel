@@ -2,7 +2,10 @@
   "name": "@company/skel",
   "version": "0.1.0",
   "description": "Skeleton Project",
-  "dependencies": {
+  "main": "./bundles/skel.umd.js",
+  "module": "./index.js",
+  "typings": "./index.d.ts",
+  "peerDependencies": {
     "@angular/common": "^2.4.7",
     "@angular/core": "^2.4.7",
     "@angular/http": "^2.4.7",

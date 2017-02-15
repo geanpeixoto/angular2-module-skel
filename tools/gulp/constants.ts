@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-const { name } = require('../../src/lib/package.json');
+const { name, main, module } = require('../../src/lib/package.json');
 const { dependencies } = require('../../package.json');
 
 export const PROJECT_ROOT = join(__dirname, '../..');
@@ -15,6 +15,8 @@ export const DEMOAPP_ROOT = join(SOURCE_ROOT, 'demo-app');
 export const DEMOAPP_ASSETS = [join(DEMOAPP_ROOT, '**/*.!(sass|ts)')];
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
 export const LIB_DIST_ROOT = join(DIST_ROOT, name);
+export const LIB_DIST_MAIN = join(LIB_DIST_ROOT, main);
+export const LIB_DIST_MODULE = join(LIB_DIST_ROOT, module);
 export const DEPENDENCIES = Object.keys(dependencies);
 export const GLOBAL = name.replace('@', '').replace('\/', '.');
 export const GLOBALS = {
