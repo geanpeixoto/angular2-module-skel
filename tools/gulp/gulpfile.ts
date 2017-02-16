@@ -27,7 +27,7 @@ task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
 
 task(':build:demoapp:lib', buildLibTask(true));
 task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
-task(':build:demoapp:sass', sassBuildTask(DEMOAPP_ROOT, LIB_DIST_ROOT));
+task(':build:demoapp:sass', sassBuildTask(DEMOAPP_ROOT, DIST_ROOT));
 task(':build:demoapp:assets', copyTask(DEMOAPP_ASSETS, DIST_ROOT));
 task(':build:demoapp:vendor', vendorTask(DEPENDENCIES, join(PROJECT_ROOT, 'node_modules'), join(DIST_ROOT, 'vendor')));
 task('build:demoapp', series('clean', series(

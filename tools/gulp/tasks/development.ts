@@ -9,7 +9,7 @@ export function vendorTask(dependencies: string[], dependenciesRoot: string, dis
   return (done: CallbackFn) => {
     dependencies
       .map(dependency => {
-        const glob = join(dependenciesRoot, dependency, '**/*.+(js|js.map)');
+        const glob = join(dependenciesRoot, dependency, '**/*.!(scss|ts)');
         return copy([glob], join(dist, dependency));
       });
     done();
