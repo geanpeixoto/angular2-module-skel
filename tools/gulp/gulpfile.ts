@@ -1,7 +1,7 @@
 import { CallbackFn } from './utils/tasks-helper';
 import { join } from 'path';
 
-import { copy, tsBuildTask, copyTask, sassBuildTask, inlineResourcesTask } from './tasks/build';
+import { copy, ngcBuildTask, tsBuildTask, copyTask, sassBuildTask, inlineResourcesTask } from './tasks/build';
 import { rollupTask } from './tasks/rollup';
 import { cleanTask } from './tasks/clean';
 import { vendorTask } from './tasks/development';
@@ -17,6 +17,7 @@ const { task, parallel, series, watch } = require('gulp');
 
 task('clean', cleanTask(DIST_ROOT));
 task(':build:lib:ts', tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
+task(':build:lib:aoc', ngcBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
 task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
@@ -47,7 +48,7 @@ task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
 function buildLibTask(useCjs?: boolean) {
   return series(
     parallel(
-      `:build:lib:${useCjs ? 'ts-cjs' : 'ts'}`,
+      `:build:lib:${useCjs ? 'ts-cjs' : 'aoc'}`,
       ':build:lib:assets',
       ':build:lib:sass'
     ),

@@ -31,6 +31,13 @@ export function tsBuildTask(tsConfigPath: string) {
   return execNodeTask('typescript', 'tsc', ['-p', tsConfigPath]);
 }
 
+/** 
+ * Retorna uma função que irá compilar os arquivos TypeScript utilizando o arquivo informado 
+ */
+export function ngcBuildTask(tsConfigPath: string) {
+  return execNodeTask('@angular/compiler-cli', 'ngc', ['-p', tsConfigPath]);
+}
+
 /** Retorna uma função que irá compilar os arquivos SCSS */
 export function sassBuildTask(root: string, dest: string) {
   const SASS_AUTOPREFIXER_OPTIONS = {
