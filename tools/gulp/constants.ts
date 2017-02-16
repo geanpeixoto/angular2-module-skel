@@ -14,8 +14,7 @@ export const LIB_ASSETS = [
 ];
 export const DEMOAPP_ROOT = join(SOURCE_ROOT, 'demo-app');
 export const DEMOAPP_ASSETS = [
-  join(DEMOAPP_ROOT, '**/*'),
-  join('!', DEMOAPP_ROOT, '**/*.ts')
+  join(DEMOAPP_ROOT, '**/*.!(ts)')
 ];
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
 export const LIB_DIST_ROOT = join(DIST_ROOT, name);

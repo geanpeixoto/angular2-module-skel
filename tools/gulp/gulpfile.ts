@@ -56,11 +56,13 @@ function buildLibTask(useCjs?: boolean) {
   );
 }
 
-function copyAssetTo(dist: string, asset: string) {
-  return function copyAsset() {
+function copyAssetTo(dist: string) {
+  const reload = serve.reload();
+  return function copyAsset(asset: string,) {
     if (!asset.match(/\.(ts|sass)$/)) {
       console.log(`Changed: ${asset}`);
       copy([asset], dist);
+      reload();
     }
   }
 }
@@ -70,7 +72,7 @@ function watchTask() {
     watch(join(LIB_ROOT, '**/*'), series(':build:demoapp:lib', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
-    watch(LIB_ASSETS).on('change', (asset: string) => series(copyAssetTo(LIB_DIST_ROOT, asset), ':dev:reload'));
+    watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
     done();
   }
 }
