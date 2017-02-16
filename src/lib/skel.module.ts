@@ -1,10 +1,11 @@
-import { ButtonComponent } from './button/button.component';
+import { SkelRoutingModule } from './skel.routing';
+import { SkelComponent } from './skel.component';
 import { NgModule } from '@angular/core';
 
 @NgModule({
-  imports: [],
-  exports: [ButtonComponent],
-  declarations: [ButtonComponent],
+  imports: [SkelRoutingModule],
+  exports: [SkelComponent],
+  declarations: [SkelComponent],
   providers: [],
 })
 export class SkelModule { }

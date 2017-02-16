@@ -16,9 +16,12 @@
     "typeRoots": [
       "../../node_modules/@types/!(node)"
     ],
+    "types": [
+      "systemjs"
+    ],
     "paths": {
-      "@angular/material": [
-        "../../dist/@angular/material"
+      "@company/skel": [
+        "../../dist/@company/skel"
       ]
     }
   },

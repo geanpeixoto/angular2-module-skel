@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'demo-app',
-  template: `
-    <router-outlet></router-outlet>
-    `
+  template: '<skl-skel></skl-skel>'
 })
-export class AppComponent { }
+export class DemoAppComponent { }

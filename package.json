@@ -13,6 +13,7 @@
   "author": "Gean Carlo Peixoto <geancpeixoto@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@angular/compiler-cli": "^2.4.7",
     "@types/glob": "^5.0.30",
     "@types/jasmine": "^2.5.41",
     "@types/node": "^7.0.5",

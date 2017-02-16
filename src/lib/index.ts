@@ -1,2 +1,2 @@
 export * from './skel.module';
-export * from './button/button.component';
+export * from './skel.component';

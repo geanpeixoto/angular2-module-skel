@@ -21,5 +21,10 @@
   "exclude": [
     "**/*.spec.*",
     "system-config-spec.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "genDir": "../../dist/@company/skel",
+    "skipTemplateCodegen": true,
+    "debug": true
+  }
 }
