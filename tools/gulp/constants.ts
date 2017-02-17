@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-const { name, main, module } = require('../../src/lib/package.json');
+const { name, main, module, global } = require('../../src/lib/package.json');
 const { dependencies } = require('../../package.json');
 
 export const PROJECT_ROOT = join(__dirname, '../..');
@@ -21,7 +21,7 @@ export const LIB_DIST_ROOT = join(DIST_ROOT, name);
 export const LIB_DIST_MAIN = join(LIB_DIST_ROOT, main);
 export const LIB_DIST_MODULE = join(LIB_DIST_ROOT, module);
 export const DEPENDENCIES = Object.keys(dependencies);
-export const GLOBAL = (name as string)
+export const GLOBAL = global || (name as string)
   .replace('@', '')
   .replace('\/', '.')
   .replace(/-\w/g, match => match[1].toUpperCase());
