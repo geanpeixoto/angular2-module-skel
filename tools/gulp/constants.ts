@@ -21,7 +21,10 @@ export const LIB_DIST_ROOT = join(DIST_ROOT, name);
 export const LIB_DIST_MAIN = join(LIB_DIST_ROOT, main);
 export const LIB_DIST_MODULE = join(LIB_DIST_ROOT, module);
 export const DEPENDENCIES = Object.keys(dependencies);
-export const GLOBAL = name.replace('@', '').replace('\/', '.');
+export const GLOBAL = (name as string)
+  .replace('@', '')
+  .replace('\/', '.')
+  .replace(/-\w/g, match => match[1].toUpperCase());
 export const GLOBALS = {
   ... DEPENDENCIES
         .filter(dep => dep.startsWith('@angular/'))
