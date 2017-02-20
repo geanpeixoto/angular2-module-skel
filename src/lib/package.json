@@ -6,6 +6,10 @@
   "main": "./bundles/skel.umd.js",
   "module": "./index.js",
   "typings": "./index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geanpeixoto/angular2-module-skel.git"
+  },
   "peerDependencies": {
     "@angular/common": "^2.4.7",
     "@angular/core": "^2.4.7",
