@@ -10,22 +10,25 @@
     ],
     "module": "amd",
     "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": true,
     "outDir": "../../dist/@company/skel",
     "rootDir": ".",
     "sourceMap": true,
     "target": "es5",
     "inlineSources": true,
     "stripInternal": false,
-    "baseUrl": "",
+    "baseUrl": ".",
     "paths": {},
     "typeRoots": [
-      "../../node_modules/@types/!(node)"
+      "../../node_modules/@types/"
     ],
     "types": [
       "jasmine",
       "rx"
-    ]
+    ],
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true
   }
 }

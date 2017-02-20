@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { DemoAppComponent } from './demo-app.component';
 import { DemoAppRoutingModule } from './demo-app.routing';
 
-import { SkelModule } from '@company/skel'
+import { SkelModule } from '@company/skel';
 
 @NgModule({
   imports: [
