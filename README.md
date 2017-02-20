@@ -28,5 +28,5 @@ npm start
 
 ### Notas
 * Optou-se pela compilação em `commonjs` durante o processo de desenvolvimento para que
-`{ moduleId: module.id }` passe a funcionar como o esperado. 
+*relative paths* passe a funcionar como o esperado. 
 Mais informações em: [https://angular.io/docs/ts/latest/cookbook/component-relative-paths.html](https://angular.io/docs/ts/latest/cookbook/component-relative-paths.html)
