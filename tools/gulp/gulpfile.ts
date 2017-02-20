@@ -5,6 +5,7 @@ import { copy, ngcBuildTask, tsBuildTask, copyTask, sassBuildTask, inlineResourc
 import { rollupTask } from './tasks/rollup';
 import { cleanTask } from './tasks/clean';
 import { vendorTask } from './tasks/development';
+import { tslintTask } from './tasks/lint';
 import * as serve from './tasks/serve';
 
 import {
@@ -13,9 +14,11 @@ import {
   DEMOAPP_ASSETS, LIB_DIST_MODULE, LIB_DIST_MAIN
 } from './constants';
 
+
 const { task, parallel, series, watch } = require('gulp');
 
 task('clean', cleanTask(DIST_ROOT));
+task(':lint:lib', tslintTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:ts', tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:aoc', ngcBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
@@ -23,7 +26,7 @@ task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
 task(':build:lib:inline-resources', inlineResourcesTask(LIB_DIST_ROOT));
 task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS));
-task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
+task('build:lib', series('clean', ':lint:lib', buildLibTask(), ':build:lib:rollup'));
 
 task(':build:demoapp:lib', buildLibTask(true));
 task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));

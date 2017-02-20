@@ -1,5 +1,6 @@
 {
   "name": "@company/skel",
+  "global": "company.skel",
   "version": "0.1.0",
   "description": "Skeleton Project",
   "main": "./bundles/skel.umd.js",
