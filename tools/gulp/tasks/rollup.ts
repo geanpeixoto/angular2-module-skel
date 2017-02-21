@@ -3,10 +3,14 @@ import { join, dirname, basename } from 'path';
 const gulp = require('gulp');
 const gulpRollup = require('gulp-better-rollup');
 
-export function rollupTask(input: string, output: string, moduleName: string, dependencies: { [name: string]: string }) {
+export interface Dependencies {
+  [name: string]: string;
+};
+
+export function rollupTask(input: string, output: string, moduleName: string, dependencies: Dependencies) {
   const rollupOptions = {
     context: 'this',
-    external: Object.keys(dependencies)
+    external: Object.keys(dependencies),
   };
 
   const rollupGenerateOptions = {
@@ -15,7 +19,7 @@ export function rollupTask(input: string, output: string, moduleName: string, de
     moduleName,
     format: 'umd',
     globals: dependencies,
-    dest: basename(output)
+    dest: basename(output),
   };
 
   return () => gulp.src(input)

@@ -8,11 +8,11 @@ const gulpSass = require('gulp-sass');
 const gulpSourcemaps = require('gulp-sourcemaps');
 const gulpAutoprefixer = require('gulp-autoprefixer');
 
-/** 
- * Se a string informada for um glob, retorne ela, Do contrário, adicione o suffixo a ela. 
+/**
+ * Se a string informada for um glob, retorne ela, Do contrário, adicione o suffixo a ela.
  */
 function _globify(maybeGlob: string, suffix = '**/*') {
-  if (maybeGlob.indexOf('*') != -1) {
+  if (maybeGlob.indexOf('*') !== -1) {
     return maybeGlob;
   }
   try {
@@ -20,19 +20,21 @@ function _globify(maybeGlob: string, suffix = '**/*') {
     if (stat.isFile()) {
       return maybeGlob;
     }
-  } catch (e) { }
+  } catch (e) {
+    /** Ignore */
+  }
   return path.join(maybeGlob, suffix);
 }
 
-/** 
- * Retorna uma função que irá compilar os arquivos TypeScript utilizando o arquivo informado 
+/**
+ * Retorna uma função que irá compilar os arquivos TypeScript utilizando o arquivo informado
  */
 export function tsBuildTask(tsConfigPath: string) {
   return execNodeTask('typescript', 'tsc', ['-p', tsConfigPath]);
 }
 
-/** 
- * Retorna uma função que irá compilar os arquivos TypeScript utilizando o arquivo informado 
+/**
+ * Retorna uma função que irá compilar os arquivos TypeScript utilizando o arquivo informado
  */
 export function ngcBuildTask(tsConfigPath: string) {
   return execNodeTask('@angular/compiler-cli', 'ngc', ['-p', tsConfigPath]);

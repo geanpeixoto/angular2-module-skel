@@ -2,10 +2,7 @@ import * as child_process from 'child_process';
 
 const resolveBin = require('resolve-bin');
 
-export interface CallbackFn {
-  (err?: any, ...args: any[]): any;
-}
-
+export type CallbackFn = (err?: any, ...args: any[]) => any;
 
 /** Options that can be passed to execTask or execNodeTask. */
 export interface ExecTaskOptions {
@@ -31,7 +28,7 @@ export function execTask(binPath: string, args: string[], options: ExecTaskOptio
     }
 
     childProcess.on('close', (code: number) => {
-      if (code != 0) {
+      if (code !== 0) {
         if (options.errMessage === undefined) {
           done('Process failed with code ' + code);
         } else {
@@ -49,15 +46,15 @@ export function execTask(binPath: string, args: string[], options: ExecTaskOptio
  * binaries that are normally in the `./node_modules/.bin` directory, but their name might differ
  * from the package. Examples are typescript, ngc and gulp itself.
  */
-export function execNodeTask(packageName: string, executable: string | string[], args?: string[],
-  options: ExecTaskOptions = {}) {
+export function execNodeTask
+(pkg: string, executable: string | string[], args?: string[], options: ExecTaskOptions = {}) {
   if (!args) {
-    args = <string[]>executable;
+    args = executable as string[];
     executable = undefined;
   }
 
   return (done: (err: any) => void) => {
-    resolveBin(packageName, { executable: executable }, (err: any, binPath: string) => {
+    resolveBin(pkg, { executable }, (err: any, binPath: string) => {
       if (err) {
         done(err);
       } else {

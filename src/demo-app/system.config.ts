@@ -7,7 +7,7 @@ const angularModules = [
   'platform-browser',
   'platform-browser-dynamic',
 ].reduce<{ [k: string]: string }>((r, mod) => {
-  r[`@angular/${mod}`] = `vendor/@angular/${mod}/bundles/${mod}.umd`
+  r[`@angular/${mod}`] = `vendor/@angular/${mod}/bundles/${mod}.umd`;
   return r;
 }, {});
 
@@ -15,14 +15,14 @@ const angularModules = [
 System.config({
   packages: {
     '@company/skel': {
-      main: 'index.js'
+      main: 'index.js',
     },
     '.': {
-      defaultExtension: 'js'
-    }
+      defaultExtension: 'js',
+    },
   },
   map: {
-    'rxjs': 'vendor/rxjs',
+    rxjs: 'vendor/rxjs',
     ...angularModules,
-  }
+  },
 });

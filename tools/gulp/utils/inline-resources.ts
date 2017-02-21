@@ -9,11 +9,12 @@ import * as glob from 'glob';
  * We use promises instead of synchronized functions to make the process less I/O bound and
  * faster. It also simplify the code.
  */
-function promiseify(fn: { (...args: any[]): any }):{(...args: any[]): Promise<any>} {
-  return function () {
-    const args = [].slice.call(arguments, 0);
+export type PromiseifyInput = (...args: any[]) => any;
+export type PromiseifyOutput = (...args: any[]) => Promise<any>;
+function promiseify(fn: PromiseifyInput): PromiseifyOutput {
+  return (...args: any[]) => {
     return new Promise((resolve, reject) => {
-      fn.apply(this, args.concat([function (err: any, value: any) {
+      fn.apply(this, args.concat([(err: any, value: any) => {
         if (err) {
           reject(err);
         } else {
@@ -27,9 +28,8 @@ function promiseify(fn: { (...args: any[]): any }):{(...args: any[]): Promise<an
 const readFile = promiseify(fs.readFile);
 const writeFile = promiseify(fs.writeFile);
 
-
 export function inlineResources(globs: string | string[]) {
-  if (typeof globs == 'string') {
+  if (typeof globs === 'string') {
     globs = [globs];
   }
 
@@ -70,14 +70,13 @@ export function inlineResourcesFromString(content: string, urlResolver: any) {
   return [
     inlineTemplate,
     inlineStyle,
-    removeModuleId
-  ].reduce((content, fn) => fn(content, urlResolver), content);
+    removeModuleId,
+  ].reduce((c, fn) => fn(c, urlResolver), content);
 }
 
 if (require.main === module) {
   inlineResources(process.argv.slice(2));
 }
-
 
 /**
  * Inline the templates for a source file. Simply search for instances of `templateUrl: ...` and
@@ -87,7 +86,7 @@ if (require.main === module) {
  * @return {string} The content with all templates inlined.
  */
 function inlineTemplate(content: string, urlResolver: any) {
-  return content.replace(/templateUrl:\s*'([^']+?\.html)'/g, function (m, templateUrl) {
+  return content.replace(/templateUrl:\s*'([^']+?\.html)'/g, (m, templateUrl) => {
     const templateFile = urlResolver(templateUrl);
     const templateContent = fs.readFileSync(templateFile, 'utf-8');
     const shortenedTemplate = templateContent
@@ -97,7 +96,6 @@ function inlineTemplate(content: string, urlResolver: any) {
   });
 }
 
-
 /**
  * Inline the styles for a source file. Simply search for instances of `styleUrls: [...]` and
  * replace with `styles: [...]` (with the content of the file included).
@@ -106,7 +104,7 @@ function inlineTemplate(content: string, urlResolver: any) {
  * @return {string} The content with all styles inlined.
  */
 function inlineStyle(content: string, urlResolver: any) {
-  return content.replace(/styleUrls:\s*(\[[\s\S]*?\])/gm, function (m, styleUrls) {
+  return content.replace(/styleUrls:\s*(\[[\s\S]*?\])/gm, (m, styleUrls) => {
     const urls = eval(styleUrls);
     return 'styles: ['
       + urls.map((styleUrl: string) => {
@@ -122,7 +120,6 @@ function inlineStyle(content: string, urlResolver: any) {
       + ']';
   });
 }
-
 
 /**
  * Remove every mention of `moduleId: module.id`.

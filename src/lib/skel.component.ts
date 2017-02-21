@@ -1,16 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'skl-skel',
   templateUrl: 'skel.component.html',
-  styleUrls: ['skel.component.css']
+  styleUrls: ['skel.component.css'],
 })
-export class SkelComponent implements OnInit {
-
+export class SkelComponent {
   title = 'Unknow';
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 }

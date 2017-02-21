@@ -11,9 +11,8 @@ import * as serve from './tasks/serve';
 import {
   LIB_ROOT, LIB_DIST_ROOT, DIST_ROOT, GLOBALS, GLOBAL,
   DEPENDENCIES, PROJECT_ROOT, DEMOAPP_ROOT, LIB_ASSETS,
-  DEMOAPP_ASSETS, LIB_DIST_MODULE, LIB_DIST_MAIN
+  DEMOAPP_ASSETS, LIB_DIST_MODULE, LIB_DIST_MAIN,
 } from './constants';
-
 
 const { task, parallel, series, watch } = require('gulp');
 
@@ -26,8 +25,9 @@ task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
 task(':build:lib:inline-resources', inlineResourcesTask(LIB_DIST_ROOT));
 task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS));
-task('build:lib', series('clean', ':lint:lib', buildLibTask(), ':build:lib:rollup'));
+task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
 
+task(':lint:demoapp', tslintTask(join(DEMOAPP_ROOT, 'tsconfig.json')));
 task(':build:demoapp:lib', buildLibTask(true));
 task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
 task(':build:demoapp:sass', sassBuildTask(DEMOAPP_ROOT, DIST_ROOT));
@@ -39,8 +39,8 @@ task('build:demoapp', series('clean', series(
     ':build:demoapp:ts',
     ':build:demoapp:sass',
     ':build:demoapp:assets',
-    ':build:demoapp:vendor'
-  )
+    ':build:demoapp:vendor',
+  ),
 )));
 
 task(':dev:watch', watchTask());
@@ -51,23 +51,24 @@ task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
 function buildLibTask(useCjs?: boolean) {
   return series(
     parallel(
+      ':lint:lib',
       `:build:lib:${useCjs ? 'ts-cjs' : 'aoc'}`,
       ':build:lib:assets',
-      ':build:lib:sass'
+      ':build:lib:sass',
     ),
-    ':build:lib:inline-resources'
+    ':build:lib:inline-resources',
   );
 }
 
 function copyAssetTo(dist: string) {
   const reload = serve.reload();
-  return function copyAsset(asset: string,) {
+  return function copyAsset(asset: string) {
     if (!asset.match(/\.(ts|sass)$/)) {
       console.log(`Changed: ${asset}`);
       copy([asset], dist);
       reload();
     }
-  }
+  };
 }
 
 function watchTask() {
@@ -77,5 +78,5 @@ function watchTask() {
     watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
     watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
     done();
-  }
+  };
 }

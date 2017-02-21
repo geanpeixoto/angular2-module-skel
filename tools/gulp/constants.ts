@@ -10,11 +10,11 @@ export const LIB_ASSETS = [
   join(LIB_ROOT, '**/*'),
   join('!', LIB_ROOT, '**/*.ts'),
   join('!', LIB_ROOT, 'tsconfig.json'),
-  join('!', LIB_ROOT, 'tsconfig-srcs.json')
+  join('!', LIB_ROOT, 'tsconfig-srcs.json'),
 ];
 export const DEMOAPP_ROOT = join(SOURCE_ROOT, 'demo-app');
 export const DEMOAPP_ASSETS = [
-  join(DEMOAPP_ROOT, '**/*.!(ts)')
+  join(DEMOAPP_ROOT, '**/*.!(ts)'),
 ];
 export const DIST_ROOT = join(PROJECT_ROOT, 'dist');
 export const LIB_DIST_ROOT = join(DIST_ROOT, name);
@@ -31,7 +31,7 @@ export const GLOBALS = {
         .reduce<{[f: string]: string}>((r, dep) => {
           r[dep] = dep
             .replace('@angular/', 'ng.')
-            .replace(/\-\w/, r => r[1].toUpperCase());
+            .replace(/\-\w/, mod => mod[1].toUpperCase());
           return r;
         }, {}),
 
@@ -54,5 +54,5 @@ export const GLOBALS = {
   'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
   'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
   'rxjs/Observable': 'Rx',
-  'rxjs/BehaviorSubject': 'Rx'
-}
+  'rxjs/BehaviorSubject': 'Rx',
+};

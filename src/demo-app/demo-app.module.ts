@@ -20,7 +20,7 @@ import { SkelModule } from '@company/skel';
   providers: [
   ],
   bootstrap: [
-    DemoAppComponent
+    DemoAppComponent,
   ],
 })
 export class DemoAppModule { }
