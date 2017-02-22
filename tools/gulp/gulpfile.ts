@@ -19,7 +19,7 @@ const { task, parallel, series, watch } = require('gulp');
 task('clean', cleanTask(DIST_ROOT));
 task(':lint:lib', tslintTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:ts', tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
-task(':build:lib:aoc', ngcBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
+task(':build:lib:ngc', ngcBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
 task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
 task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
@@ -47,11 +47,11 @@ task(':dev:serve', serve.start(DIST_ROOT));
 task(':dev:reload', serve.reload());
 task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
 
-function buildLibTask(useCjs?: boolean) {
+function buildLibTask(development?: boolean) {
   return series(
     parallel(
       ':lint:lib',
-      `:build:lib:${useCjs ? 'ts-cjs' : 'aoc'}`,
+      ...(development ? [':build:lib:ts-cjs'] : [':build:lib:ngc', ':build:lib:ts']),
       ':build:lib:assets',
       ':build:lib:sass',
     ),
