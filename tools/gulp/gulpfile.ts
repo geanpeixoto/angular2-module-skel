@@ -9,7 +9,7 @@ import { tslintTask } from './tasks/lint';
 import * as serve from './tasks/serve';
 
 import {
-  LIB_ROOT, LIB_DIST_ROOT, DIST_ROOT, GLOBALS, GLOBAL,
+  LIB_ROOT, LIB_DIST_ROOT, DIST_ROOT, GLOBALS_MAP, GLOBAL,
   DEPENDENCIES, PROJECT_ROOT, DEMOAPP_ROOT, LIB_ASSETS,
   DEMOAPP_ASSETS, LIB_DIST_MODULE, LIB_DIST_MAIN,
 } from './constants';
@@ -24,9 +24,8 @@ task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
 task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
 task(':build:lib:inline-resources', inlineResourcesTask(LIB_DIST_ROOT));
-task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS));
+task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS_MAP));
 task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
-
 task(':lint:demoapp', tslintTask(join(DEMOAPP_ROOT, 'tsconfig.json')));
 task(':build:demoapp:lib', buildLibTask(true));
 task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
