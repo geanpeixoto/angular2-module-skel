@@ -51,9 +51,6 @@ export function getAlias(module: string): string {
 }
 
 export function fromDependencies(dependencies: string[]): StringMap {
-  return dependencies
-    .reduce<StringMap>((r, dep) => {
-      r[dep] = getAlias(dep);
-      return r;
-    }, {});
+  const map = dependencies.reduce<StringMap>((r, dep) => ({ ...r, [dep]: getAlias(dep) }), {});
+  return { ...map, ...RXJS_GLOBALS };
 }
