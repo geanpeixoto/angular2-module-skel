@@ -9,10 +9,12 @@ const angularModules = [
   'platform-browser',
   'platform-browser-dynamic',
 ].reduce<{ [k: string]: string }>((r, mod) => {
-  r[`@angular/${mod}`] = `vendor/@angular/${mod}/bundles/${mod}.umd`;
-  return r;
+  return {
+    ...r, 
+    [`@angular/${mod}`]: `vendor/@angular/${mod}/bundles/${mod}.umd`,
+    [`@angular/${mod}/testing`]: `vendor/@angular/${mod}/bundles/${mod}-testing.umd`,
+  };
 }, {});
-
 
 System.config({
   packages: {
@@ -24,6 +26,7 @@ System.config({
     },
   },
   map: {
+    '@angular/core/testing': 'vendor/@angular/core/bundles/core-testing.umd.js',
     rxjs: 'vendor/rxjs',
     ...angularModules,
   },

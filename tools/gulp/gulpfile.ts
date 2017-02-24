@@ -7,6 +7,7 @@ import { cleanTask } from './tasks/clean';
 import { vendorTask } from './tasks/development';
 import { tslintTask } from './tasks/lint';
 import * as serve from './tasks/serve';
+import * as test from './tasks/test';
 
 import {
   LIB_ROOT, LIB_DIST_ROOT, DIST_ROOT, GLOBALS_MAP, GLOBAL,
@@ -42,7 +43,18 @@ task('build:demoapp', series('clean', series(
   ),
 )));
 
-task(':dev:watch', watchTask());
+task(':test:single-run', test.singleTestTask(join(PROJECT_ROOT, 'tools/test/karma.config.js')));
+task(':test:watch', testWatchTask());
+task(':test', test.testTask(join(PROJECT_ROOT, 'tools/test/karma.config.js')));
+task('test:single-run', series('clean', ':build:demoapp:vendor', ':build:demoapp:lib', ':test:single-run'));
+task('test', series('clean',
+  ':build:demoapp:vendor',
+  ':build:demoapp:lib',
+  ':test:watch',
+  ':test',
+));
+
+task(':dev:watch', devWatchTask());
 task(':dev:serve', serve.start(DIST_ROOT));
 task(':dev:reload', serve.reload());
 task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
@@ -70,7 +82,14 @@ function copyAssetTo(dist: string) {
   };
 }
 
-function watchTask() {
+function testWatchTask() {
+  return (done: CallbackFn) => {
+    watch(join(LIB_ROOT, '**/*'), series(':build:demoapp:lib'));
+    done();
+  };
+}
+
+function devWatchTask() {
   return (done: CallbackFn) => {
     watch(join(LIB_ROOT, '**/*'), series(':build:demoapp:lib', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
