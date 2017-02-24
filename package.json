@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp build:lib",
-    "start": "gulp dev"
+    "start": "gulp dev",
+    "test": "gulp test",
+    "test:single-run": "gulp test:single-run"
   },
   "private": true,
   "keywords": [],
