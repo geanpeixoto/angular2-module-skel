@@ -5,8 +5,10 @@
     "outDir": "../../dist/",
     "types": [
       "systemjs",
-      "jasmine",
       "node"
+    ],
+    "typeRoots": [
+      "../../node_modules/@types/"
     ],
     "paths": {
       "@company/skel": [
