@@ -20,8 +20,14 @@ const RXJS_GLOBALS: StringMap = {
   'rxjs/add/operator/first': 'Rx.Observable.prototype',
   'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
   'rxjs/add/operator/switchMap': 'Rx.Observable.prototype',
+  'rxjs/add/operator/last': 'Rx.Observable.prototype',
+  'rxjs/add/operator/publishReplay': 'Rx.Observable.prototype',
+  'rxjs/add/operator/mergeMap': 'Rx.Observable.prototype',
+  'rxjs/add/operator/zip': 'Rx.Observable.prototype',
+  'rxjs/add/operator/combineLatest': 'Rx.Observable.prototype',
   'rxjs/Observable': 'Rx',
   'rxjs/BehaviorSubject': 'Rx',
+  'rxjs/ReplaySubject': 'Rx',
 };
 
 const SCOPE_MAP: StringMap = {
