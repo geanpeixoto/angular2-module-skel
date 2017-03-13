@@ -1,25 +1,10 @@
 {
+  "extends": "../lib/tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["es6", "es2015", "dom"],
     "module": "es2015",
-    "moduleResolution": "node",
-    "outDir": "../../dist/@company/skel",
-    "rootDir": ".",
-    "sourceMap": true,
-    "target": "es5",
-    "inlineSources": true,
-    "stripInternal": false,
     "typeRoots": [
       "../../node_modules/@types/!(node)"
-    ],
-    "noEmitOnError": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true
+    ]
   },
   "exclude": [
     "**/*.spec.*",
