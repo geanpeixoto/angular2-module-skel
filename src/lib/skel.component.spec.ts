@@ -7,13 +7,16 @@ describe('SkelComponent', () => {
   let fixture: ComponentFixture<SkelComponent>;
   let component: SkelComponent;
 
-  beforeEach(() => {
+  beforeEach(done => {
     TestBed.configureTestingModule({
       declarations: [ SkelComponent ],
     });
-
-    fixture = TestBed.createComponent(SkelComponent);
-    component = fixture.componentInstance;
+    TestBed.compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(SkelComponent);
+        component = fixture.componentInstance;
+      })
+      .then(() => done());
   });
 
   it('expect to be trutly', () => {

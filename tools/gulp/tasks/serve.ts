@@ -1,4 +1,5 @@
 import { CallbackFn } from './../utils/tasks-helper';
+import { join } from 'path';
 const browserSync = require('browser-sync');
 
 export type Middleware = (req: any, res: any, next: CallbackFn) => void;
@@ -8,6 +9,9 @@ export function start(baseDir: string, middleware?: Middleware[]) {
     browserSync.init({
       server: {
         baseDir,
+        routes: {
+          '/vendor': join(baseDir, '../node_modules'),
+        },
       },
       logLevel: 'silent',
       middleware,

@@ -19,17 +19,23 @@
     "baseUrl": ".",
     "paths": {},
     "typeRoots": [
-      "../../node_modules/@types/!(node)"
+      "../../node_modules/@types"
     ],
     "types": [
       "systemjs",
       "jasmine",
-      "rx"
+      "rx",
+      "node"
     ],
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true
+  },
+  "angularCompilerOptions": {
+    "genDir": "../../dist/@company/skel",
+    "skipTemplateCodegen": true,
+    "debug": true
   }
 }

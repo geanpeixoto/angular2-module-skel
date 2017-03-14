@@ -18,15 +18,15 @@ import {
 const { task, parallel, series, watch } = require('gulp');
 
 task('clean', cleanTask(DIST_ROOT));
-task(':lint:lib', tslintTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
-task(':build:lib:ts', tsBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
-task(':build:lib:ngc', ngcBuildTask(join(LIB_ROOT, 'tsconfig-srcs.json')));
+task(':lint:lib', tslintTask(join(LIB_ROOT, 'tsconfig.json')));
+task(':build:lib:ngc', ngcBuildTask(join(LIB_ROOT, 'tsconfig.json')));
+task(':build:lib:ts-es6', tsBuildTask(join(LIB_ROOT, 'tsconfig-es6.json')));
 task(':build:lib:ts-cjs', tsBuildTask(LIB_ROOT));
 task(':build:lib:sass', sassBuildTask(LIB_ROOT, LIB_DIST_ROOT));
 task(':build:lib:assets', copyTask(LIB_ASSETS, LIB_DIST_ROOT));
 task(':build:lib:inline-resources', inlineResourcesTask(LIB_DIST_ROOT));
 task(':build:lib:rollup', rollupTask(LIB_DIST_MODULE, LIB_DIST_MAIN, GLOBAL, GLOBALS_MAP));
-task('build:lib', series('clean', buildLibTask(), ':build:lib:rollup'));
+task('build:lib', series('clean', buildLibTask(), ':build:lib:inline-resources', ':build:lib:rollup'));
 task(':lint:demoapp', tslintTask(join(DEMOAPP_ROOT, 'tsconfig.json')));
 task(':build:demoapp:lib', buildLibTask(true));
 task(':build:demoapp:ts', tsBuildTask(DEMOAPP_ROOT));
@@ -39,7 +39,7 @@ task('build:demoapp', series('clean', series(
     ':build:demoapp:ts',
     ':build:demoapp:sass',
     ':build:demoapp:assets',
-    ':build:demoapp:vendor',
+    // ':build:demoapp:vendor',
   ),
 )));
 
@@ -60,14 +60,11 @@ task(':dev:reload', serve.reload());
 task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
 
 function buildLibTask(development?: boolean) {
-  return series(
-    parallel(
-      ':lint:lib',
-      ...(development ? [':build:lib:ts-cjs'] : [':build:lib:ngc', ':build:lib:ts']),
-      ':build:lib:assets',
-      ':build:lib:sass',
-    ),
-    ':build:lib:inline-resources',
+  return parallel(
+    ':lint:lib',
+    ...(development ? [':build:lib:ts-cjs'] : [':build:lib:ngc', ':build:lib:ts-es6']),
+    ':build:lib:assets',
+    ':build:lib:sass',
   );
 }
 
@@ -91,9 +88,11 @@ function testWatchTask() {
 
 function devWatchTask() {
   return (done: CallbackFn) => {
-    watch(join(LIB_ROOT, '**/*'), series(':build:demoapp:lib', ':dev:reload'));
+    watch(join(LIB_ROOT, '**/*.ts'), series(':build:lib:ts-cjs', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
+    watch(join(LIB_ROOT, '**/*.{sass,scss}'), series(':build:lib:sass', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
+    watch(LIB_ASSETS).on('change', copyAssetTo(LIB_DIST_ROOT));
     watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
     done();
   };
