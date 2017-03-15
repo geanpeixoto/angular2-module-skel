@@ -25,6 +25,7 @@ const RXJS_GLOBALS: StringMap = {
   'rxjs/add/operator/last': 'Rx.Observable.prototype',
   'rxjs/add/operator/publishReplay': 'Rx.Observable.prototype',
   'rxjs/add/operator/mergeMap': 'Rx.Observable.prototype',
+  'rxjs/add/operator/debounceTime': 'Rx.Observable.prototype',
   'rxjs/Observable': 'Rx',
   'rxjs/BehaviorSubject': 'Rx',
   'rxjs/ReplaySubject': 'Rx',

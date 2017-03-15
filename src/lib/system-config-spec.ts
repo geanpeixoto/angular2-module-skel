@@ -27,7 +27,7 @@ System.config({
   },
   map: {
     '@angular/core/testing': 'vendor/@angular/core/bundles/core-testing.umd.js',
-    rxjs: 'vendor/rxjs',
+    'rxjs': 'vendor/rxjs',
     ...angularModules,
   },
 });

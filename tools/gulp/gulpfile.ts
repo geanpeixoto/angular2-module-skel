@@ -92,8 +92,8 @@ function devWatchTask() {
     watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
     watch(join(LIB_ROOT, '**/*.{sass,scss}'), series(':build:lib:sass', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
-    watch(LIB_ASSETS).on('change', copyAssetTo(LIB_DIST_ROOT));
-    watch(DEMOAPP_ASSETS).on('change', copyAssetTo(DIST_ROOT));
+    watch(join(LIB_ROOT, '**/*.html'), series(':build:lib:assets', ':dev:reload'));
+    watch(join(DEMOAPP_ROOT, '**/*.html'), series(':build:demoapp:assets', ':dev:reload'));
     done();
   };
 }
