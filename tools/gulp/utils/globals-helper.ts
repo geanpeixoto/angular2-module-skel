@@ -2,6 +2,16 @@ export interface StringMap {
   [k: string]: string;
 };
 
+const DEFAULT_DEPENDENCIES = [
+  '@angular/core',
+  '@angular/http',
+  '@angular/flex-layout',
+  '@angular/material',
+  '@angular/common',
+  '@angular/router',
+  '@angular/platform-browser',
+];
+
 const RXJS_GLOBALS: StringMap = {
   'rxjs/Subject': 'Rx',
   'rxjs/add/observable/fromEvent': 'Rx.Observable',
@@ -58,6 +68,8 @@ export function getAlias(module: string): string {
 }
 
 export function fromDependencies(dependencies: string[]): StringMap {
-  const map = dependencies.reduce<StringMap>((r, dep) => ({ ...r, [dep]: getAlias(dep) }), {});
+  const map = [...dependencies, ...DEFAULT_DEPENDENCIES]
+    .reduce<StringMap>((r, dep) => ({ ...r, [dep]: getAlias(dep) }), {});
+
   return { ...map, ...RXJS_GLOBALS };
 }
