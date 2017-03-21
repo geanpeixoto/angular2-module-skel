@@ -55,7 +55,7 @@ task('test', series('clean',
 ));
 
 task(':dev:watch', devWatchTask());
-task(':dev:serve', serve.start(DIST_ROOT));
+task(':dev:serve', serve.start({ baseDir: DIST_ROOT }));
 task(':dev:reload', serve.reload());
 task('dev', series('build:demoapp', ':dev:serve', ':dev:watch'));
 
@@ -88,8 +88,9 @@ function testWatchTask() {
 
 function devWatchTask() {
   return (done: CallbackFn) => {
-    watch(join(LIB_ROOT, '**/*.ts'), series(':build:lib:ts-cjs', ':dev:reload'));
-    watch(join(DEMOAPP_ROOT, '**/*.ts'), series(':build:demoapp:ts', ':dev:reload'));
+    watch(join(LIB_ROOT, '**/*.ts'), parallel(':lint:lib', series(':build:lib:ts-cjs', ':dev:reload')));
+    watch(join(DEMOAPP_ROOT, '**/*.ts'),
+      parallel(':lint:demoapp', series(':lint:demoapp', ':build:demoapp:ts', ':dev:reload')));
     watch(join(LIB_ROOT, '**/*.{sass,scss}'), series(':build:lib:sass', ':dev:reload'));
     watch(join(DEMOAPP_ROOT, '**/*.{sass,scss}'), series(':build:demoapp:sass', ':dev:reload'));
     watch(join(LIB_ROOT, '**/*.html'), series(':build:lib:assets', ':dev:reload'));

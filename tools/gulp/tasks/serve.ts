@@ -2,11 +2,20 @@ import { CallbackFn } from './../utils/tasks-helper';
 import { join } from 'path';
 const browserSync = require('browser-sync');
 
+export type OpenType = false | 'local' | 'external';
+
 export type Middleware = (req: any, res: any, next: CallbackFn) => void;
 
-export function start(baseDir: string, middleware?: Middleware[]) {
+export interface StartConfig {
+  baseDir: string;
+  middleware?: Middleware[];
+  open?: OpenType;
+}
+
+export function start({ baseDir, middleware, open = false }: StartConfig) {
   return (done: CallbackFn) => {
     browserSync.init({
+      open: false,
       server: {
         baseDir,
         routes: {
