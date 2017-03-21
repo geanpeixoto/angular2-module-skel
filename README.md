@@ -13,6 +13,7 @@ Altere as configurações dos seguintes arquivos:
 * `src/lib/tsconfig.json`
 * `src/lib/tsconfig-srcs.json`
 * `src/demo-app/tsconfig.json`
+* `src/demo-app/system.config.ts`
 
 ### Comandos
 
